@@ -1,15 +1,15 @@
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 import time
 import datetime
 import sys
 
 class HealthBot:
-    def __init__(self, username, password):
+    def __init__(self, username, password, driver):
         self.username = username
         self.password = password
-        self.driver = webdriver.Firefox()
+        self.driver = driver
         self.base_url = "https://dailyhealth.rit.edu"
-
 
     def log(self, string):
         prefix = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + " | "
@@ -80,10 +80,17 @@ class HealthBot:
 
 def main():
     creds = ["joeshmoe@fake.com", "blahblah"]
-    if len(sys.argv)==3:
-        creds = sys.argv[1:]
+    if len(sys.argv)>=3:
+        creds = sys.argv[1:3]
 
-    bot = HealthBot(creds[0], creds[1])
+    if "--headless" in sys.argv:
+        options = Options()
+        options.add_argument("--headless")
+        driver = webdriver.Firefox(options=options)
+    else:
+        driver = webdriver.Firefox()
+    
+    bot = HealthBot(creds[0], creds[1], driver)
 
     bot.driver.implicitly_wait(1)
 
