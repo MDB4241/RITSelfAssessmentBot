@@ -1,19 +1,21 @@
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
+from input import processArguments
 import time
 import datetime
 import sys
 
 class HealthBot:
-    def __init__(self, username, password, driver):
+    def __init__(self, username, password,symptoms ,driver):
         self.username = username
         self.password = password
+        self.symptoms = symptoms
         self.driver = driver
         self.base_url = "https://dailyhealth.rit.edu"
 
     def log(self, string):
         prefix = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + " | "
-        print(prefix+string)
+        print(prefix + string)
 
     def click_button(self, xpath):
         try:
@@ -58,7 +60,10 @@ class HealthBot:
 
         self.click_button("//a[contains(text(),'I agree')]")
 
-        self.click_button("//div[text()='NO']")
+        if self.symptoms == True:
+            self.click_button("//div[text()='YES']")
+        elif self.symptoms == False:
+            self.click_button("//div[text()='NO']")
 
 
     def confirm(self):
@@ -67,30 +72,31 @@ class HealthBot:
         """
         self.log("Confirming...")
 
-        if self.element_exists("//div[contains(text(),'Cleared to Circulate')]"):
-            self.log("Assessment Successful!")
-            #Notify
-        else:
-            self.log("Assessment Failed!")
-            #Notify
+        if self.symptoms == False:
+            if self.element_exists("//div[contains(text(),'Cleared to Circulate')]"):
+                self.log("Assessment Successful!")
+                #Notify
+            else:
+                self.log("Assessment Failed!")
+                #Notify
+        elif self.symptoms == True:
+            print("Please close this program and manually complete the form.")
 
         self.driver.quit()
         sys.exit(0)
 
 
 def main():
-    creds = ["joeshmoe@fake.com", "blahblah"]
-    if len(sys.argv)>=3:
-        creds = sys.argv[1:3]
+    run_values = processArguments(sys.argv)
 
-    if "--headless" in sys.argv:
+    if run_values["headless"]:
         options = Options()
         options.add_argument("--headless")
-        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Chrome(options=options)
     else:
-        driver = webdriver.Firefox()
+        driver = webdriver.Chrome()
     
-    bot = HealthBot(creds[0], creds[1], driver)
+    bot = HealthBot(run_values["username"], run_values["password"], run_values['symptoms'], driver)
 
     bot.driver.implicitly_wait(1)
 
