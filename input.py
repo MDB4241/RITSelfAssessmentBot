@@ -1,6 +1,7 @@
 """
 Defines methods to handle user input
 """
+import getpass
 import sys, datetime, getopt
 
 
@@ -85,7 +86,7 @@ def dumbMode(run_values):
 
     while True:
         try:
-            run_values['password'] = input("Enter your RIT password: ")
+            run_values['password'] = getpass.getpass("Enter your password (No text will appear in console): ")
             break
         except Exception:
             continue

@@ -1,3 +1,5 @@
+import getpass
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from input import processArguments
@@ -5,11 +7,15 @@ import time
 import datetime
 import sys
 
+from configData import ConfigData
+
+
 class HealthBot:
     def __init__(self, username, password,symptoms ,driver):
         self.username = username
         self.password = password
         self.symptoms = symptoms
+        #TODO add try catch and say that its not in the path or installed (gecko)
         self.driver = driver
         self.base_url = "https://dailyhealth.rit.edu"
 
@@ -86,8 +92,16 @@ class HealthBot:
         sys.exit(0)
 
 
+
+def createConfigFile():
+    username = input("Enter your RIT ID (abc1234): ")
+    password = getpass.getpass("Enter your password (No text will appear in console): ")
+    return ConfigData(username, password)
+
+
 def main():
     run_values = processArguments(sys.argv)
+
 
     if run_values["headless"]:
         options = Options()
@@ -95,8 +109,10 @@ def main():
         driver = webdriver.Chrome(options=options)
     else:
         driver = webdriver.Chrome()
-    
+
+
     bot = HealthBot(run_values["username"], run_values["password"], run_values['symptoms'], driver)
+
 
     bot.driver.implicitly_wait(1)
 
