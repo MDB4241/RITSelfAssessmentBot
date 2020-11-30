@@ -23,7 +23,6 @@ class ConfigData:
 		self._password = password
 
 	def save(self):
-		to_save = json.dumps(self)
+		to_save = json.dumps(self.__dict__)
 		file = open("config.json", "w")
 		file.write(to_save)
-
