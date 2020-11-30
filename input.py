@@ -76,7 +76,7 @@ def dumbMode(run_values):
 	Interactive way to populate input options.
 		:return: run_values with additional options input by user
 	"""
-    # Get initial funds value from user
+
     while True:
         try:
             run_values['username'] = input("Enter your RIT username: ")

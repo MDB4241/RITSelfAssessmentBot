@@ -100,19 +100,20 @@ def createConfigFile():
 
 
 def main():
-    run_values = processArguments(sys.argv)
+    try:
+        with open('config.txt','rb') as config:
+            pass
+    except Exception:
+        run_values = processArguments(sys.argv)
 
-
-    if run_values["headless"]:
-        options = Options()
-        options.add_argument("--headless")
-        driver = webdriver.Chrome(options=options)
-    else:
-        driver = webdriver.Chrome()
-
+        if run_values["headless"]:
+            options = Options()
+            options.add_argument("--headless")
+            driver = webdriver.Chrome(options=options)
+        else:
+            driver = webdriver.Chrome()
 
     bot = HealthBot(run_values["username"], run_values["password"], run_values['symptoms'], driver)
-
 
     bot.driver.implicitly_wait(1)
 
