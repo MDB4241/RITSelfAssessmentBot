@@ -1,7 +1,6 @@
-import getpass
-
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
+#rom selenium.webdriver.chrome.options import Options
 import input
 import time
 import datetime
@@ -45,7 +44,6 @@ class HealthBot:
             return False
 
 
-
     def sign_in(self):
         self.log("Attempting to sign in...")
         self.driver.get(self.base_url)
@@ -64,10 +62,10 @@ class HealthBot:
 
         self.click_button("//a[contains(text(),'I agree')]")
 
-        if self.symptoms == True:
-            self.click_button("//div[text()='YES']")
-        elif self.symptoms == False:
+        if self.symptoms == False:
             self.click_button("//div[text()='NO']")
+        elif self.symptoms == True:
+            self.click_button("//div[text()='YES']")
 
 
     def confirm(self):
@@ -92,7 +90,8 @@ class HealthBot:
 
 def main():
     try:
-        input.configMode()
+        run_values = input.configMode()
+        driver = webdriver.Firefox()
 
     except FileNotFoundError:
         run_values = input.processArguments(sys.argv)
@@ -100,11 +99,13 @@ def main():
         if run_values["headless"]:
             options = Options()
             options.add_argument("--headless")
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Firefox(options=options)
+            #driver = webdriver.Chrome(options=options)
         else:
-            driver = webdriver.Chrome()
+            driver = webdriver.Firefox()
+            #driver = webdriver.Chrome()
 
-        bot = HealthBot(run_values["username"], run_values["password"], run_values['symptoms'], driver)
+    bot = HealthBot(run_values["username"], run_values["password"], run_values['symptoms'], driver)
 
     bot.driver.implicitly_wait(1)
 

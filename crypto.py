@@ -1,8 +1,8 @@
 from cryptography import fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from hashlib import sha256
-import json
 import base64
+import sys
 
 class Crypto:
     def __init__(self, password):
@@ -14,7 +14,14 @@ class Crypto:
         return key
 
     def decrypt(self, bytes):
-        return self.fernet.decrypt(bytes).decode()
+        try:
+            decrypted = self.fernet.decrypt(bytes).decode()
+            return decrypted
+        except fernet.InvalidToken:
+            print("Incorrect password!")
+            sys.exit(10)
+
+
 
     def encrypt(self, bytes):
         return self.fernet.encrypt(bytes)

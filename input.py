@@ -73,7 +73,7 @@ def processArguments(args):
     elif dumbmode:
         return dumbMode(run_values)
     else:
-        print("You fucked up something. Try 'HealthBot.py -h' for help")
+        print("Not sure how you got here. Try 'HealthBot.py -h' for help")
         sys.exit(1)
 
 
@@ -99,9 +99,9 @@ def dumbMode(run_values):
     while True:
         try:
             symptoms = input("Are you feeling any symptoms?[Y/N]: ")
-            if symptoms == 'Y':
+            if symptoms.upper() == 'Y':
                 run_values['symptoms'] = True
-            elif symptoms == 'N':
+            elif symptoms.upper() == 'N':
                 run_values['symptoms'] = False
             break
         except Exception:
@@ -122,8 +122,13 @@ def configMode():
 
     with open('config.json', 'rb') as config:
         enc_bytes = config.read()
-    password = getpass.getpass("Enter your password (No text will appear in console): ")
-    # password = input("Pass: ")
+    while True:
+        try:
+            password = getpass.getpass("Enter your password (No text will appear in console): ")
+            break
+        except Exception:
+            continue
+
     crypto = Crypto(password)
     plaintext = crypto.decrypt(enc_bytes)
 
@@ -136,7 +141,19 @@ def configMode():
     run_values['username'] = userObject.username
     run_values['password'] = userObject.password
 
-    run_values['symptoms'] = input("Are you feeling any symptoms?[Y/N]: ")
+
+    while True:
+        try:
+            symptoms = input("Are you feeling any symptoms?[Y/N]: ")
+            if symptoms.upper() == 'Y':
+                run_values['symptoms'] = True
+            elif symptoms.upper() == 'N':
+                run_values['symptoms'] = False
+            break
+        except Exception:
+            continue
+
+
 
 
     return run_values
