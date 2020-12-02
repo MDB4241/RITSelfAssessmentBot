@@ -1,5 +1,4 @@
 from configData import ConfigData
-from crypto import Crypto
 import getpass
 
 
@@ -21,7 +20,12 @@ def main():
         except Exception:
             continue
 
-    crypto = Crypto(password)
+    #TODO: ask for headless or not
+
+    config_data = ConfigData(username, password)
+
+    config_data.save()
+
 
 
 main()

@@ -1,6 +1,7 @@
 from cryptography import fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from hashlib import sha256
+import json
 import base64
 
 class Crypto:
@@ -12,19 +13,9 @@ class Crypto:
         key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
         return key
 
-    # def encrypt_to_file(self, filename, bytes):
-    #     with open(filename,'wb') as config:
-    #         config.write(self.fernet.encrypt(bytes))
-    #
-    # def decrypt_to_mem(self, filename,bytes):
-    #     # TODO return (username,password)
-    #     with open(filename,'rb') as config:
-    #         temp = self.fernet.decrypt(bytes)
-    #     return None
+    def decrypt(self, bytes):
+        return self.fernet.decrypt(bytes).decode()
 
     def encrypt(self, bytes):
         return self.fernet.encrypt(bytes)
-
-    def decrypt(self, bytes):
-        return self.fernet.decrypt(bytes)
 

@@ -3,6 +3,7 @@ Defines methods to handle user input
 """
 import getpass
 import sys, datetime, getopt
+from crypto import Crypto
 
 
 def processArguments(args):
@@ -76,7 +77,6 @@ def dumbMode(run_values):
 	Interactive way to populate input options.
 		:return: run_values with additional options input by user
 	"""
-
     while True:
         try:
             run_values['username'] = input("Enter your RIT username: ")
@@ -102,7 +102,6 @@ def dumbMode(run_values):
         except Exception:
             continue
 
-    # Determine end and start of backtest period
     while True:
         response = input('Would you like to run headless?[Y/N]: ')
         if response.upper() == "Y":
@@ -111,3 +110,22 @@ def dumbMode(run_values):
         elif response.upper() == "N":
             run_values["headless"] = False
             return run_values
+
+
+def configMode():
+    run_values = {}
+
+    with open('config.json', 'rb') as config:
+        enc_bytes = config.read()
+    password = getpass.getpass("Enter your password (No text will appear in console): ")
+    crypto = Crypto(password)
+    plaintext = crypto.decrypt(enc_bytes)
+
+    #Populate run_values
+    #run_values['username'] = plaintext['username']
+    #run_values['password'] = plaintext['password']
+
+    run_values['symptoms'] = input("Are you feeling any symptoms?[Y/N]: ")
+
+
+    return run_values
