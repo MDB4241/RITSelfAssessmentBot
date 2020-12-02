@@ -29,3 +29,6 @@ class ConfigData:
 		to_save = json.dumps(self.__dict__)
 		with open("config.json", "wb") as config:
 			config.write(crypto.encrypt(to_save.encode()))
+
+def configDataFromDict(dct):
+	return ConfigData(dct['_username'], dct['_password'])

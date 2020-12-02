@@ -2,7 +2,12 @@
 Defines methods to handle user input
 """
 import getpass
+import json
 import sys, datetime, getopt
+from collections import namedtuple
+from types import SimpleNamespace
+
+from configData import configDataFromDict
 from crypto import Crypto
 
 
@@ -118,12 +123,18 @@ def configMode():
     with open('config.json', 'rb') as config:
         enc_bytes = config.read()
     password = getpass.getpass("Enter your password (No text will appear in console): ")
+    # password = input("Pass: ")
     crypto = Crypto(password)
     plaintext = crypto.decrypt(enc_bytes)
 
+    dict = json.loads(plaintext)
+
+    userObject = configDataFromDict(dict)
+
+
     #Populate run_values
-    #run_values['username'] = plaintext['username']
-    #run_values['password'] = plaintext['password']
+    run_values['username'] = userObject.username
+    run_values['password'] = userObject.password
 
     run_values['symptoms'] = input("Are you feeling any symptoms?[Y/N]: ")
 
